@@ -18,7 +18,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections", branch: "1.1.4"),
         .package(url: "https://github.com/swiftlang/swift-markdown", branch: "swift-markdown-0.5"),
         .package(url: "https://github.com/google-gemini/generative-ai-swift", branch: "0.5.6"),
-        .package(path: "../MillerKit")
+        .package(url: "https://github.com/pointfreeco/swift-html", branch: "0.5.0"),
+        .package(url: "https://github.com/tree-sitter/tree-sitter-cpp", branch: "v0.23.4"),
+        .package(url: "https://github.com/ladanjohari/MillerKit", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -32,7 +34,8 @@ let package = Package(
                 .product(name: "Markdown", package: "swift-markdown"),
                 "MillerKitGemini",
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
-                .product(name: "Collections", package: "swift-collections")
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "Html", package: "swift-html")
             ]
         ),
         .target(

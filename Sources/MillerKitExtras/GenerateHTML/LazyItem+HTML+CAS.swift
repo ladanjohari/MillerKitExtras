@@ -1,3 +1,5 @@
+import Markdown
+import Html
 import Foundation
 import llbuild2fx
 import TSFCASFileTree
@@ -6,6 +8,7 @@ import CryptoKit
 import MillerKit
 
 extension LazyItem {
+    // MARK: materializeBeautifulStaticHTMLSite
     public func materializeBeautifulStaticHTMLSite(
         ctx: Context,
         siteGeneratorDelegate: SiteGeneratorDelegate
@@ -25,6 +28,7 @@ extension LazyItem {
         }
     }
 
+    // MARK: toBeautifulStaticHTMLSite
     public func toBeautifulStaticHTMLSite(
         ctx: Context,
         siteGeneratorDelegate: SiteGeneratorDelegate
@@ -55,6 +59,45 @@ extension LazyItem {
         throw StringError("Subitems is nil for root tree")
     }
 
+    // MARK: tableOfContents
+    func tableOfContents(ctx: Context) async throws -> Html.Node {
+        var chapters: [Html.Node] = []
+
+        let rawDocuverse = RawDocuverse()
+
+        for (topLevelOffset, (category, children)) in Dictionary(grouping: rawDocuverse.paths, by: { rawDocuverse.categories[$0] ?? "No category"}).sorted(by: {
+            $0.key < $1.key
+        }).enumerated() {
+            var sections: [Html.Node] = []
+            
+            for (secondLevelOffset, path) in children.enumerated() {
+                let expandedPath: String = NSString(string: path).expandingTildeInPath
+                let markdown = try String(contentsOf: URL(filePath: expandedPath), encoding: .utf8)
+
+                let document = Document(parsing: markdown)
+                
+                let pairs: [(name: String, markup: any Markup, level: Int)] = document.children.map { child in
+                    if let heading = child as? Heading {
+                        return [(name: heading.plainText, markup: child, level: heading.level)]
+                    } else {
+                        return []
+                    }
+                }.flatMap { $0 }
+                let tree = buildTree(from: pairs).enumerated().map { $0.element.toHtml([topLevelOffset+1, secondLevelOffset+1]) }
+
+                sections.append(.element("ul", [], .fragment([] + tree)))
+            }
+            
+            let node: Html.Node = .ul(
+                .li([.text("\(topLevelOffset+1)"), .raw("&nbsp;&nbsp;"), .text(category), .fragment(sections)])
+            )
+            chapters.append(node)
+        }
+
+        return .fragment(chapters)
+    }
+
+    // MARK: generateIndex
     func generateIndex(
         ctx: Context,
         siteGeneratorDelegate: SiteGeneratorDelegate
@@ -140,11 +183,22 @@ extension LazyItem {
             contents += extraContents.map(\.1).joined(separator: "\n")
 
             contents += "<hr />"
-            Array(dict).sorted(by: { a, b in a.value.count > b.value.count }).map {
+
+            // MARK: Tag cloud
+            Array(dict).sorted(by: { a, b in
+                if a.value.count == b.value.count {
+                    return a.key < b.key
+                } else {
+                    return a.value.count > b.value.count
+                }
+            }).map {
                 if $0.value.count >= 1 {
                     contents += "<span style=\"\($0.value.count > 1 ? "font-weight: bold" : "")\">\($0.key) <span style='color: grey'>(\($0.value.count))</span></span> "
                 }
             }
+
+            contents += "<hr />"
+            contents += render(try await tableOfContents(ctx: ctx))
         }
         contents = html(withBody: contents, withCSS: """
 #content {
@@ -178,6 +232,7 @@ pre {
         return tree
     }
 
+    // MARK: html
     func html(withBody body: String, withCSS style: String) -> String {
         return """
 <!DOCTYPE>
@@ -227,6 +282,7 @@ div#container {
 """
     }
 
+    // MARK: generatePage
     func generagePage(_ page: LazyItem, ctx: Context) async throws -> LLBCASFileTree? {
         print("[generagePage] generating \(page)")
         let client = LLBCASFSClient(ctx.db)
@@ -241,10 +297,14 @@ div#container {
             }
 
             let contents = html(withBody: """
-<div id="content">
+<div class="css-masonry css-fullsonry">
+<div class="item nima">
+<div class="title">
 <p><b>\(page.name)</b></p>
 
 \(bodies.map { "<p>\($0)</p>" }.joined(separator: "\n"))
+</div>
+</div>
 </div>
 """, withCSS: """
 #content {

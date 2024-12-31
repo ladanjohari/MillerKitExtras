@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "millerkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ladanjohari/MillerKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d72f5556876cf03ef00f44f248722239746c31d2"
+      }
+    },
+    {
       "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
@@ -88,6 +97,15 @@
       "state" : {
         "revision" : "6483d340853a944c96dbcc28b27dd10b6c581703",
         "version" : "1.1.2"
+      }
+    },
+    {
+      "identity" : "swift-html",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-html",
+      "state" : {
+        "branch" : "0.5.0",
+        "revision" : "662619ff6c39c389694b9f5d522c72291d034928"
       }
     },
     {
@@ -199,6 +217,24 @@
       }
     },
     {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "42a086182681cf661f5c47c9b7dc3931de18c6d7",
+        "version" : "1.17.6"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
+      }
+    },
+    {
       "identity" : "swift-system",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
@@ -223,6 +259,15 @@
       "state" : {
         "revision" : "b464fcd8d884e599e3202d9bd1eee29a9e504069",
         "version" : "0.7.2"
+      }
+    },
+    {
+      "identity" : "tree-sitter-cpp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter-cpp",
+      "state" : {
+        "branch" : "v0.23.4",
+        "revision" : "f41e1a044c8a84ea9fa8577fdd2eab92ec96de02"
       }
     }
   ],
