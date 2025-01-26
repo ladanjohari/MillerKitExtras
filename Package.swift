@@ -20,7 +20,7 @@ let package = Package(
         .package(url: "https://github.com/google-gemini/generative-ai-swift", branch: "0.5.6"),
         .package(url: "https://github.com/pointfreeco/swift-html", branch: "0.5.0"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-cpp", branch: "v0.23.4"),
-        .package(url: "https://github.com/ladanjohari/MillerKit", branch: "main")
+        .package(url: "https://github.com/ladanjohari/MillerKit", branch: "1.25")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
